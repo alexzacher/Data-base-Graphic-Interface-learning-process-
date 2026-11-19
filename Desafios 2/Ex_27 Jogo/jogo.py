@@ -13,7 +13,7 @@ class Personagem (ABC):
 
     #--- Metodos
     def atacar (self, alvo, dano = 50): #ataque aleatorio nao passa de 100 ( randint )
-        if self.vida > 0 or alvo.vida > 0:
+        if self.vida > 0 and alvo.vida > 0:
             fator = alvo.receber_dano(dano)
             #alvo.vida = alvo.vida - fator
             table = Table(title="Jogo")
@@ -54,8 +54,14 @@ class Guerreiro(Personagem):
         self.golpe = ['Espada', 'Uso de escudo', 'Corpo a corpo']
 
     #--- Metodos
-    def curar(self):
-        pass
+    def curar(self, cura = 5):
+        fator_cura = random.randint(1, cura)
+        if self.vida + fator_cura < 100:
+            self.vida += fator_cura
+            print(f'>>> Vc curou {fator_cura} do/a {type(self).__name__}, tenho o total de {self.vida} vida')
+        elif self.vida + fator_cura > 100:
+            self.vida = 100
+            print(f'>>> Vc curou {fator_cura} do/a {type(self).__name__}, tenho o total de {self.vida} vida')
 
 
 # ------------- SubClass 2 ------------------
@@ -67,15 +73,17 @@ class Mago(Personagem):
         self.golpe = ['Bola de jogo', 'Magia de dado', 'Congelar']
 
     #--- Metodos
-    def curar(self, cura):
-        fator_cura = random.randint(1,cura)
-        if self.vida + fator_cura < 100:
-            self.vida += fator_cura
-            print(f'>>> Vc curou {fator_cura} do/a {type(self).__name__}, tenho o total de {self.vida} vida')
-        elif self.vida + fator_cura > 100:
-            self.vida = 100
-            print(f'>>> Vc curou {fator_cura} do/a {type(self).__name__}, tenho o total de {self.vida} vida')
-
+    def curar(self, cura = 5):
+        fator_cura = random.randint(1, cura)
+        if self.vida > 0:
+            if self.vida + fator_cura < 120:
+                self.vida += fator_cura
+                print(f'>>> Vc curou {fator_cura} do/a {type(self).__name__}, tenho o total de {self.vida} vida')
+            elif self.vida + fator_cura > 120:
+                self.vida = 100
+                print(f'>>> Vc curou {fator_cura} do/a {type(self).__name__}, tenho o total de {self.vida} vida')
+        else:
+            print(f'{self.nome} nao podera se curar pois esta morto.')
 
 # ---------------------------------------------
 # ---------------------------------------------
@@ -83,8 +91,11 @@ g = Guerreiro("Gurreiro", 100)
 m = Mago("Mago", 100)
 
 
-g.atacar(m, 100)
-m.curar(1000)
+g.atacar(m, 100000)
+m.curar(100)
+
+m.atacar(g, 100)
+g.curar(100)
 inspect(g, methods=True)
 inspect(m, methods=True)
 #https://www.youtube.com/watch?v=7rVsfsoapBs&t=303s
