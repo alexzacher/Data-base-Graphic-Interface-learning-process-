@@ -98,3 +98,6 @@ m.atacar(g, 100)
 g.curar(100)
 inspect(g, methods=True)
 inspect(m, methods=True)
+
+
+## test
